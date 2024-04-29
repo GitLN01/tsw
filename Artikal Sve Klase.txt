@@ -1,0 +1,460 @@
+Artikal
+package artikal;
+public class Artikal {
+	private String naziv= null;
+	private int cena= 0;
+	private int broj= 0;
+
+	public Artikal(String naziv, int cena, int broj) {
+		super();
+		this.naziv= naziv;
+		this.cena= cena;
+		this.broj= broj;
+	}
+
+	public int getCena() {
+		return cena;
+	}
+
+	public void setCena(int cena) {
+		if (cena< 0)
+			throw new RuntimeException("Cena artikla ne sme biti manja od 0");
+		this.cena= cena;
+	}
+
+	public int getBroj() {
+		return broj;
+	}
+
+	public void setBroj(int broj) {
+		if (broj< 0)
+			throw new RuntimeException("Broj komada artikala mora biti veci od 0");
+		this.broj= broj;
+	}
+
+	public String getNaziv() {
+		return naziv;
+	}
+
+	public void setNaziv(String naziv) {
+		if (naziv== null)
+			throw new RuntimeException("Morate uneti naziv artikla");
+		this.naziv= naziv;
+	}
+
+	public double ukupnaCena() {
+		return (this.broj * this.cena * 1.18);
+	}
+
+	public boolean viseOdJedan() {
+		if (this.broj > 1)
+			return true;
+		else
+			return false;
+	}
+
+	@Override
+	public String toString() {
+		return "Artikal [naziv=" + naziv+ ", cena =" + cena + ", broj =" + broj+ "]";
+	}
+
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+package artikal;
+
+import static org.junit.Assert.*;
+
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+import org.junit.rules.TestName;
+import org.junit.rules.TestRule;
+import org.junit.rules.Timeout;
+
+public class ArtikalTest {
+
+	public Artikal artikal;
+	@Before
+	public void testProveraOperativnogSistema() {
+	    Assume.assumeTrue(System.getProperty("os.name").contains("Windows"));
+	}
+	
+	@Rule
+	public final TestName name=new TestName();
+	
+	@Rule
+	public final ErrorCollector ec=new ErrorCollector();
+	
+	@Rule
+	public final TestRule timeout=Timeout.seconds(6);
+	
+	@Before
+	public void init() {
+		artikal=new Artikal("Artikal", 100,10);
+	}
+	
+	@Test
+	public void getCenaTest() {
+		int stvarniRezultat=artikal.getCena();
+		assertEquals(100,stvarniRezultat);
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void setCenaTest() {
+		int stvarniRezultat=artikal.getCena();
+		assertEquals(100, stvarniRezultat);
+		
+		artikal.setCena(-100);
+	}
+	
+	@Test
+	public void setCenaTest2() {
+		int ocekivaniRezultat=100;
+		int stvarniRezultat=artikal.getCena();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+		
+		artikal.setCena(200);
+		ocekivaniRezultat=200;
+		stvarniRezultat=artikal.getCena();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+	}
+	
+	@Test
+	public void getBrojTest() {
+		int stvarniRezultat=artikal.getBroj();
+		assertEquals(10,stvarniRezultat);
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void setBrojTest() {
+		int ocekivaniRezultat=10;
+		int stvarniRezultat=artikal.getBroj();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+		
+		artikal.setBroj(-100);
+	}
+	@Test
+	public void setCenaTest3() {
+		int ocekivaniRezultat=10;
+		int stvarniRezultat=artikal.getBroj();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+		
+		artikal.setBroj(20);
+		ocekivaniRezultat=20;
+		stvarniRezultat=artikal.getBroj();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+	}
+	
+	@Test
+	public void getNazivTest() {
+		String stvarniRezultat=artikal.getNaziv();
+		assertEquals("Artikal",stvarniRezultat);
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void setNazivTest() {
+		String ocekivaniRezultat="Artikal";
+		String stvarniRezultat=artikal.getNaziv();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+		
+		artikal.setNaziv(null);
+	}
+	
+	@Test
+	public void setNazivTest2() {
+		String ocekivaniRezultat="Artikal";
+		String stvarniRezultat=artikal.getNaziv();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+		
+		artikal.setNaziv("NoviArtikal");
+		ocekivaniRezultat="NoviArtikal";
+		stvarniRezultat=artikal.getNaziv();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+	}
+	
+	@Test 
+	public void ukupnaCenaTest() {
+		double ocekivaniRezultat=(artikal.getBroj() * artikal.getCena() * 1.18);
+		double stvarniRezultat=artikal.ukupnaCena();
+		assertEquals(ocekivaniRezultat,stvarniRezultat,0.001);
+	}
+	
+	@Test
+	public void toStringTest() {
+		String ocekivaniRezultat="Artikal [naziv=" + artikal.getNaziv()+ ", cena =" + artikal.getCena()+ ", broj =" + artikal.getBroj()+ "]";
+		String stvarniRezultat=artikal.toString();
+		assertEquals(ocekivaniRezultat,stvarniRezultat);
+	}
+	
+	@Test
+	public void viseOdJedanTest() {
+		artikal.setBroj(1);
+		assertFalse(artikal.viseOdJedan());
+	}
+	
+	@Test
+	public void viseOdJedanTest2() {
+		artikal.setBroj(2);
+		assertTrue(artikal.viseOdJedan());
+	}
+}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+package artikal;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({
+	ArtikalTest.class
+})
+public class ArtikalTests {
+}
+
+
+Prodavnica
+
+package artikal;
+
+import java.util.LinkedList;
+
+public class Prodavnica {
+	public LinkedList<Artikal> lista = new LinkedList<Artikal>();
+
+	public void dodajArtikal(Artikal a) {
+		if (a == null)
+			throw new NullPointerException("Artikal ne sme biti null");
+		if (lista.contains(a))
+			throw new RuntimeException("Artikal vec postoji");
+		lista.add(a);
+	}
+
+	public LinkedList<Artikal> pronadjiArtikle(Artikal a) {
+		if (a.getCena() == 0)
+			return null;
+		LinkedList<Artikal> novaLista = new LinkedList<Artikal>();
+		for (int i = 0; i < lista.size(); i++)
+			if (lista.get(i).viseOdJedan()==true)
+				novaLista.add(lista.get(i));
+		return novaLista;
+	}
+}
+
+
+package artikal;
+
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+import org.junit.rules.TestRule;
+import org.junit.rules.Timeout;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+
+@RunWith(Parameterized.class)
+public class ProdavnicaDodajArtikalParameterizedTest {
+
+	private Artikal artikal;
+	private Prodavnica prodavnica;
+	@Parameters
+	public static Collection<Object[]> lista(){
+		return Arrays.asList(new Object[][] {
+			{new Artikal("Artikal", 100,10)},
+			{new Artikal("Artikal", 100,10)},
+			{new Artikal("Artikal", 100,10)},
+			{new Artikal("Artikal", 200,20)}	
+		});
+	}
+	
+	@Before
+	public void testProveraOperativnogSistema() {
+	    Assume.assumeTrue(System.getProperty("os.name").contains("Windows"));
+	}
+	public ProdavnicaDodajArtikalParameterizedTest(Artikal artikal) {
+		this.artikal=artikal;
+	}
+	
+	@Before
+	public void init() {
+		prodavnica=new Prodavnica();
+		
+	}
+	@Rule
+	public final ErrorCollector ec=new ErrorCollector();
+	
+	@Rule
+	public final TestRule timeout=Timeout.seconds(5);
+	
+	
+	@Test(expected=NullPointerException.class)
+	public void dodajArtikalTest() {
+		artikal=null;
+		prodavnica.dodajArtikal(artikal);
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void dodajArtikalTest2() {
+		prodavnica.dodajArtikal(artikal);
+		prodavnica.dodajArtikal(artikal);
+	}
+	
+	
+	@Test
+	public void dodajArtikalTest3() {
+		assertFalse(prodavnica.lista.contains(artikal));
+		prodavnica.dodajArtikal(artikal);
+		assertTrue(prodavnica.lista.contains(artikal));
+	}
+	--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+package artikal;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
+import org.junit.runners.Suite.SuiteClasses;
+
+@RunWith(Suite.class)
+@SuiteClasses({
+	ProdavnicaDodajArtikalParameterizedTest.class,
+	 ProdavnicaPronadjiAtikalParameretrizedTest.class
+})
+public class ProdavnicaParameterizedTests {
+
+}
+
+package artikal;
+
+import static org.junit.Assert.*;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.LinkedList;
+
+import org.junit.Assume;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ErrorCollector;
+import org.junit.rules.TestRule;
+import org.junit.rules.Timeout;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
+import org.junit.*;
+@RunWith(Parameterized.class)
+public class ProdavnicaPronadjiAtikalParameretrizedTest {
+
+	private Artikal artikal;
+	private Prodavnica prodavnica;
+	@Before
+	public void testProveraOperativnogSistema() {
+	    Assume.assumeTrue(System.getProperty("os.name").contains("Windows"));
+	}
+	public ProdavnicaPronadjiAtikalParameretrizedTest(Artikal artikal) {
+		this.artikal=artikal;
+	}
+	
+	@Before
+	public void init() {
+		prodavnica=new Prodavnica();
+		
+	}
+	@Rule
+	public final ErrorCollector ec=new ErrorCollector();
+	
+	@Rule
+	public final TestRule timeout=Timeout.seconds(5);
+	
+	@Parameters
+	public static Collection<Object[]> lista(){
+		return Arrays.asList(new Object[][] {
+			{new Artikal("Artikal", 100,10)},
+			{new Artikal("Artikal", 100,10)},
+			{new Artikal("Artikal", 100,10)},
+			{new Artikal("Artikal", 200,20)},
+			
+		});
+	}
+	
+	@Test
+	public void pronadjiArtikalTest() {
+		 if (artikal.getCena() == 0) {
+		        assertNull(prodavnica.pronadjiArtikle(artikal));
+		    } else {
+		        assertTrue(prodavnica.pronadjiArtikle(artikal).isEmpty());
+		    }
+		
+	}
+	
+	@Test
+	public void pronadjiArtikalTest2() {
+		 assertFalse(prodavnica.lista.contains(artikal));
+	        prodavnica.dodajArtikal(artikal);
+	        LinkedList<Artikal> lista = new LinkedList<>();
+	        if (artikal.viseOdJedan()) {
+	            lista.add(artikal);
+	        }
+	        assertEquals(lista, prodavnica.pronadjiArtikle(artikal));
+	    }
+	
+	@Test
+	public void pronadjiArtikalTest3()
+	{
+		assertFalse(prodavnica.lista.contains(artikal));
+	    prodavnica.dodajArtikal(artikal);
+	    LinkedList<Artikal> lista = new LinkedList<>();
+	    lista.add(artikal);
+	    assertEquals(lista, prodavnica.pronadjiArtikle(artikal));
+    }
+}
+
+package artikal;
+
+import static org.junit.Assert.*;
+
+import java.util.logging.Logger;
+
+import org.junit.Test;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.notification.Failure;
+
+public class TestRunner {
+
+	 public static void main(String[] args)
+	 {
+		 Result result=JUnitCore.runClasses(ArtikalTests.class,ProdavnicaParameterizedTests.class);
+		 
+		 Logger l=Logger.getLogger(TestRunner.class.toString());
+		 
+		 for (Failure f:result.getFailures())
+		 {
+			 l.warning(f.toString());
+		 }
+		 l.info("Ukupan broj testova:"+result.getRunCount());
+		 l.info("Ukupno vreme "+result.getRunTime());
+		 l.info("Uspesno testova "+(result.getRunCount()-result.getFailureCount()-result.getIgnoreCount()-result.getAssumptionFailureCount()));
+		 l.info("Dinamicki preskocenih: "+ result.getAssumptionFailureCount());
+		 l.info("Preskocenih testova "+result.getIgnoreCount());
+		 
+		 if(result.wasSuccessful())
+			 l.info("Svi su uspesno izvrseni");
+		 else
+			 l.warning("Nisu svi testovi uspesno izvrseni");}}
